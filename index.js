@@ -50,6 +50,18 @@ server.post('/api/users', (req, res) => {
         })
 })
 
+//delete user with remove() and DELETE:
+server.delete('/api/users/:id', (req, res) => {
+    const userId = req.params.id;
+    database.remove(userId)
+            .then(user => {
+                res.status(200).json({message:"The user has been removed."})
+            })
+            .catch(error => {
+                res.status(500).json({ error: "The user could not be removed" })
+            })
+})
+
 //told the server to listen on port 4000 for changes and gave a message for me to know whether or not it's working
 const port = 4000;
 server.listen(port, () => console.log('The API is running'));

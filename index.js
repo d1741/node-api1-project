@@ -62,6 +62,24 @@ server.delete('/api/users/:id', (req, res) => {
             })
 })
 
+//specific user is updated and modified doc is returned using update() and PUT:
+server.put('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const changes = req.body;
+
+    database.update(id, changes)
+        .then(updated => {
+            if(updated) {
+                res.status(200).json({message: "User successfully updated: " ,updated})
+            } else {
+                res.status(400).json({error: "Please provide name and bio for the user."})
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ error: "The user information could not be modified." })
+        })
+})
+
 //told the server to listen on port 4000 for changes and gave a message for me to know whether or not it's working
 const port = 4000;
 server.listen(port, () => console.log('The API is running'));

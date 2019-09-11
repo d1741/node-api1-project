@@ -6,6 +6,7 @@ const express = require('express');
 const database = require('./data/db');
 
 const server = express();
+server.use(express.json());
 
 //initial get request to test the server on insomnia
 server.get('/api', (req, res) => {
@@ -19,7 +20,7 @@ server.get('/api/users', (req, res) => {
                 res.status(200).json(users);
             })
             .catch(error => {
-                res.status(500).json({message: "error getting list of users"})
+                res.status(500).json( { error: "The users information could not be retrieved." })
             })
 })
 
@@ -36,7 +37,18 @@ server.get('/api/users/:id', (req, res) => {
             })
 })
 
-
+//create a user using insert() and POST:
+server.post('/api/users', (req, res) => {
+    const userInformation = req.body;
+    console.log('new user added: ', userInformation);
+    database.insert(userInformation)
+        .then(result => {
+            res.status(201).json(result);
+        })
+        .catch(error => {
+            res.status(500).json({ error: "There was an error while saving the user to the database" })
+        })
+})
 
 //told the server to listen on port 4000 for changes and gave a message for me to know whether or not it's working
 const port = 4000;
